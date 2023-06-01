@@ -4,14 +4,16 @@ import com.example.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-@Getter
-@Setter
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
@@ -30,8 +32,11 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
-    public Order() {
-
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+    
+    public Set<OrderItem> getItems() {
+        return items;
     }
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
