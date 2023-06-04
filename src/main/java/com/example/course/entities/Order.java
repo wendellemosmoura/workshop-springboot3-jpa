@@ -3,17 +3,16 @@ package com.example.course.entities;
 import com.example.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-@Getter @Setter @NoArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
@@ -34,10 +33,10 @@ public class Order implements Serializable {
 
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
-    
-    public Set<OrderItem> getItems() {
-        return items;
-    }
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
@@ -46,12 +45,21 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id);
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Instant getMoment() {
+        return moment;
+    }
+
+    public void setMoment(Instant moment) {
+        this.moment = moment;
     }
 
     public OrderStatus getOrderStatus() {
@@ -59,11 +67,32 @@ public class Order implements Serializable {
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus.getCode();
+        if (orderStatus != null) {
+            this.orderStatus = orderStatus.getCode();
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<OrderItem> items) {
+        this.items = items;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }
