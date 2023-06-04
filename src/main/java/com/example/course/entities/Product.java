@@ -6,9 +6,9 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@EqualsAndHashCode
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {
@@ -91,5 +91,18 @@ public class Product implements Serializable {
             set.add(x.getOrder());
         }
         return set;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
